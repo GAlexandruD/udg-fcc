@@ -1,9 +1,17 @@
 import ImportFile from "./component/ImportFile";
+import ImpFileReactTable from "./component/ImpFileReactTable";
+import ReactDataGridTable from "./component/ReactDataGridTable";
 
 const App = () => {
   return (
-    <div className="bg-slate-500 w-screen h-screen">
+    <div className="">
+      {
+        //  <ImportFile />
+        // <ReactDataGridTable />
+      }
+      <ImpFileReactTable />
       <ImportFile />
+      <ReactDataGridTable />
     </div>
   );
 };
