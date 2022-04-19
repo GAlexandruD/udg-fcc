@@ -5,7 +5,7 @@ import Index from "./component/TailwindTable";
 
 const App = () => {
   return (
-    <div className="">
+    <>
       {
         //  <ImportFile />
         // <ReactDataGridTable />
@@ -13,7 +13,7 @@ const App = () => {
         // <Table />
       }
       <ImpFileReactTable />
-    </div>
+    </>
   );
 };
 
