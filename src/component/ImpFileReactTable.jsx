@@ -13,6 +13,7 @@ import {
 import Table from "../component/Table";
 import TopBar from "./TopBar";
 import CreateRowModal from "./CreateRowModal";
+import Chart from "./Chart";
 
 const ImpFileReactTable = () => {
   const [columns, setColumns] = useState([]);
@@ -22,6 +23,7 @@ const ImpFileReactTable = () => {
   const [sorting, setSorting] = useState(false);
   const inputEl = useRef({});
   const [toggle, setToggle] = useState(false);
+  const [chartData, setChartData] = useState({});
   const [selectedColumnForChart, setSelectedColumnForChart] =
     useState("Hersteller");
 
@@ -54,15 +56,17 @@ const ImpFileReactTable = () => {
     }, {});
 
     console.log({ myArray });
+    setChartData(myArray);
   }, [data]);
 
   useEffect(() => {
     console.log({ columns });
+    console.log({ chartData });
 
     // columns.map((column) => {
     //   console.log(column.accessor);
     // });
-  }, [columns]);
+  }, [columns, chartData]);
 
   // process CSV data
   const processData = (dataString) => {
@@ -179,10 +183,6 @@ const ImpFileReactTable = () => {
     <div className="w-full flex flex-col">
       <TopBar fileName={fileName} handleFileUpload={handleFileUpload} />
 
-      <div className="h-52">
-        <VictoryPie />
-      </div>
-
       <Table
         columns={columns}
         data={data}
@@ -194,6 +194,13 @@ const ImpFileReactTable = () => {
         constructAnotherRow={constructAnotherRow}
         toggleModal={toggleModal}
       />
+
+      {chartData ? (
+        <Chart
+          selectedColumnForChart={selectedColumnForChart}
+          chartData={chartData}
+        />
+      ) : null}
 
       <CreateRowModal
         columns={columns}

@@ -123,7 +123,7 @@ function Table({
           // <!-- Modal toggle -->
         }
       </div>
-      <div className="relative shadow-md sm:rounded-lg bg-green-400 m-2 mx-auto">
+      <div className="relative shadow-md sm:rounded-lg bg-green-400 mx-auto">
         <table
           className="max-w-4xl m-2 text-sm text-left text-gray-500 dark:text-gray-400 mb-10"
           {...getTableProps()}

@@ -96,7 +96,8 @@ const CreateRowModal = ({
               </div>
             </div>
             <button
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
                 atTheEnd
                   ? setData([...data, inputEl.current])
                   : setData([inputEl.current, ...data]);
