@@ -5,7 +5,7 @@ const TopBar = ({ fileName, handleFileUpload }) => {
         <h1 className="text-3xl pt-4">
           {fileName ? fileName : "Start by importing a csv file..."}
         </h1>
-        <ul className="py-4">
+        <ul className="py-4 list-disc ">
           <li className="">
             Sorting is done by pressing on each column header
           </li>

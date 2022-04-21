@@ -1,19 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryAxis,
-  VictoryTheme,
-  VictoryStack,
-  VictoryPie,
-} from "victory";
-
 import Table from "../component/Table";
 import TopBar from "./TopBar";
 import CreateRowModal from "./CreateRowModal";
 import Chart from "./Chart";
+
+import { loadedColumns, loadedList } from "../csvs/csvData.js";
 
 const ImpFileReactTable = () => {
   const [columns, setColumns] = useState([]);
@@ -35,8 +28,6 @@ const ImpFileReactTable = () => {
   };
 
   useEffect(() => {
-    console.log({ data });
-
     //Set the data for chart:
 
     //1. Get the data from the table by column name
@@ -55,9 +46,8 @@ const ImpFileReactTable = () => {
       );
     }, {});
 
-    console.log({ myArray });
     setChartData(myArray);
-  }, [data]);
+  }, [data, selectedColumnForChart]);
 
   useEffect(() => {
     console.log({ columns });
@@ -106,12 +96,21 @@ const ImpFileReactTable = () => {
       accessor: element,
     }));
     setData(list);
+    console.log({ list });
     setOriginalData(list);
     // const memoizedRows = useMemo(() => rows, [rows]);
     setColumns(columns);
 
     setPending(false);
   };
+
+  //Auto loading some data to work for in development
+  useEffect(() => {
+    setFileName("Artikel.csv");
+    setData(loadedList);
+    setColumns(loadedColumns);
+    setOriginalData(loadedList);
+  }, []);
 
   // handle file upload
   const handleFileUpload = (e) => {
@@ -122,12 +121,14 @@ const ImpFileReactTable = () => {
       reader.onload = (event) => {
         /* Parse data */
         const bstr = event.target.result;
+        /* Read csv/excel file */
         const wb = XLSX.read(bstr, { type: "binary" });
         /* Get first worksheet */
         const wsname = wb.SheetNames[0];
         const ws = wb.Sheets[wsname];
         /* Convert array of arrays */
         const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+
         processData(data);
       };
       reader.readAsBinaryString(file);
@@ -198,7 +199,9 @@ const ImpFileReactTable = () => {
       {chartData ? (
         <Chart
           selectedColumnForChart={selectedColumnForChart}
+          setSelectedColumnForChart={setSelectedColumnForChart}
           chartData={chartData}
+          columns={columns}
         />
       ) : null}
 
