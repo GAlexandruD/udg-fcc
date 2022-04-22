@@ -5,11 +5,14 @@ const TopBar = ({ fileName, handleFileUpload }) => {
         <h1 className="text-3xl pt-4">
           {fileName ? fileName : "Start by importing a csv file..."}
         </h1>
-        <ul className="py-4 list-disc ">
-          <li className="">
-            Sorting is done by pressing on each column header
-          </li>
+        <ul className="py-4 list-disc text-left">
           <li>Cells can be edited by clicking inside the cell</li>
+          <li>
+            All unwanted changes can be undone by pressing "Reset Data" button
+          </li>
+          <li className="">
+            To sort press the "Sorting" button and any column header
+          </li>
         </ul>
         <input
           className="mt-4 p-1 border border-gray-400 rounded-lg"

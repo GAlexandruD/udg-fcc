@@ -171,7 +171,6 @@ const ImpFileReactTable = () => {
     array.map((element) => {
       return (inputEl.current[element] = "");
     });
-    console.log(inputEl);
 
     setToggle(true);
   };
@@ -181,7 +180,7 @@ const ImpFileReactTable = () => {
   };
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-11/12 flex flex-col">
       <TopBar fileName={fileName} handleFileUpload={handleFileUpload} />
 
       <Table

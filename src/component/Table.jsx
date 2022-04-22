@@ -10,6 +10,8 @@ import {
 
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 
+import * as XLSX from "xlsx";
+
 const EditableCell = ({
   value: initialValue,
   row: { index },
@@ -93,42 +95,59 @@ function Table({
     useBlockLayout,
     useResizeColumns
   );
+  const downloadCsv = (json, fileName) => {
+    console.log("download csv");
+    const worksheet = XLSX.utils.json_to_sheet(json);
+    const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
+    XLSX.writeFile(workbook, fileName, { bookType: "csv" });
+    //Build a csv from data and download it
+    // const csv = XLSX.utils.aoa_to_sheet(data);
+
+    console.log({ data });
+    // console.log({ csv });
+    // const blob = new Blob([csv], { type: "text/csv" });
+    // const url = window.URL.createObjectURL(blob);
+    // const link = document.createElement("a");
+    // link.setAttribute("href", url);
+    // link.setAttribute("download", "data.csv");
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+  };
 
   return (
     <>
       <div className="flex">
-        <button
-          className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button"
-          onClick={() => constructAnotherRow()}
-        >
-          Add another Row
-        </button>
-        <button
-          className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button"
-          onClick={resetData}
-        >
-          Reset Data
-        </button>
-        <button
-          onClick={onSortingChange}
-          className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          type="button"
-        >
-          Sorting: {`${sorting ? "Yes" : "No"}`}
-        </button>
-
-        {
-          // <!-- Modal toggle -->
-        }
+        <div className="flex z-1">
+          <button
+            className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button"
+            onClick={() => constructAnotherRow()}
+          >
+            Add another Row
+          </button>
+          <button
+            className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button"
+            onClick={resetData}
+          >
+            Reset Data
+          </button>
+          <button
+            onClick={onSortingChange}
+            className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            type="button"
+          >
+            Sorting: {`${sorting ? "Yes" : "No"}`}
+          </button>
+        </div>
       </div>
-      <div className="relative shadow-md sm:rounded-lg bg-green-400 mx-auto">
+      <div className="relative shadow-md sm:rounded-lg bg-green-400 mx-auto w-screen overflow-auto">
         <table
-          className="max-w-4xl m-2 text-sm text-left text-gray-500 dark:text-gray-400 mb-10"
+          className="w-screen max-w-4xl m-2 text-sm text-left text-gray-500 dark:text-gray-400 mb-10"
           {...getTableProps()}
         >
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <thead className="sticky text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             {headerGroups.map((headerGroup) => (
               <tr
                 className="sticky top-0"
@@ -191,7 +210,7 @@ function Table({
           </tbody>
         </table>
       </div>
-      <div className="fixed bottom-0 flex flex-col lg:flex-row p-2 justify-between items-start lg:items-stretch w-full">
+      <div className="flex flex-col lg:flex-row p-2 justify-between items-start lg:items-stretch w-full">
         <div className="w-full lg:w-1/3 flex flex-col lg:flex-row items-start lg:items-center">
           <div className="flex items-center">
             <a
@@ -403,7 +422,10 @@ function Table({
             </div>
           </div>
           <div className="lg:ml-6 flex items-center">
-            <button className="bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-sm">
+            <button
+              className="bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-sm"
+              onClick={() => downloadCsv(data, "itworks.csv")}
+            >
               Download csv
             </button>
             <div className="text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 w-8 h-8 rounded flex items-center justify-center">

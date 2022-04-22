@@ -45,6 +45,19 @@ const CreateRowModal = ({
             className="px-6 pb-4 space-y-6 lg:px-8 sm:pb-6 xl:pb-8"
             action="#"
           >
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                atTheEnd
+                  ? setData([...data, inputEl.current])
+                  : setData([inputEl.current, ...data]);
+                toggleModal();
+              }}
+              type="submit"
+              className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Add row
+            </button>
             <h3 className="text-xl font-medium text-gray-900 dark:text-white">
               Add a new row
             </h3>
