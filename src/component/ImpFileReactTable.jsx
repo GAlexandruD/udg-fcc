@@ -180,7 +180,7 @@ const ImpFileReactTable = () => {
   };
 
   return (
-    <div className="w-11/12 flex flex-col">
+    <div className="w-screen flex flex-col justify-center place-items-center overflow-x-hidden bg-yellow-300/10">
       <TopBar fileName={fileName} handleFileUpload={handleFileUpload} />
 
       <Table

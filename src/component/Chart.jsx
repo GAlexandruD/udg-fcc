@@ -27,24 +27,17 @@ const Chart = ({
   console.log({ modifiedChartData });
   console.log(modifiedChartData.length);
 
-  const data = [
-    { x: "Cats", y: 35 },
-    { x: "Dogs", y: 40 },
-    { x: "Birds", y: 55 },
-  ];
-
-  const sweet = "VictoryBar";
-
   return modifiedChartData.length > 0 ? (
-    <div className="w-full h-1/2 flex justify-center place-items-center">
+    <div className="w-screen h-auto flex flex-col justify-center place-items-center">
       <>
-        <label htmlFor="column" className="text-xl">
-          {selectedColumnForChart}
+        <label htmlFor="column" className="text-xl text-gray-700 m-2 ">
+          Displaying data for:
         </label>
         <select
           id="columns"
           name="columns"
           defaultChecked={selectedColumnForChart}
+          className="w-min h-8 p-1 border border-gray-400/80 rounded-lg text-gray-800"
           onChange={(e) => {
             setSelectedColumnForChart(e.target.value);
           }}
@@ -57,10 +50,6 @@ const Chart = ({
         </select>
       </>
       <div className="h-full flex flex-col place-items-center mt-4">
-        <div className="text-center">
-          <p>Displaying data for:</p>
-          <p className="font-bold">{selectedColumnForChart}</p>
-        </div>
         <VictoryPie
           title="PIEEEEEE"
           labels={({ datum }) => `${datum.x}: ${datum.y}`}
@@ -76,10 +65,6 @@ const Chart = ({
         />
       </div>
       <div className="h-full flex flex-col place-items-center mt-4">
-        <div className="text-center">
-          <p>Displaying data for:</p>
-          <p className="font-bold">{selectedColumnForChart}</p>
-        </div>
         <VictoryBar
           containerComponent={
             <VictoryVoronoiContainer

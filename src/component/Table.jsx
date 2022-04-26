@@ -119,15 +119,44 @@ function Table({
     <>
       <div className="flex">
         <div className="flex z-1">
-          <button
-            className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            type="button"
+          <div
             onClick={() => constructAnotherRow()}
+            className="m-2 text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 w-8 h-8 rounded flex items-center justify-center"
           >
-            Add another Row
-          </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="icon icon-tabler icon-tabler-plus"
+              width={28}
+              height={28}
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" />
+              <line x1={12} y1={5} x2={12} y2={19} />
+              <line x1={5} y1={12} x2={19} y2={12} />
+            </svg>
+          </div>
+          <div className="m-2 text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 w-8 h-8 rounded flex items-center justify-center">
+            <svg
+              strokeWidth={2}
+              width={24}
+              height={24}
+              viewBox="0 0 32 32"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke="white"
+                d="M27,8H6.83l3.58-3.59L9,3,3,9l6,6,1.41-1.41L6.83,10H27V26H7V19H5v7a2,2,0,0,0,2,2H27a2,2,0,0,0,2-2V10A2,2,0,0,0,27,8Z"
+              />
+            </svg>
+          </div>
+
           <button
-            className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="m-2 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-sm"
             type="button"
             onClick={resetData}
           >
@@ -135,16 +164,22 @@ function Table({
           </button>
           <button
             onClick={onSortingChange}
-            className="m-2 block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="bg-gray-200 m-2 p-6 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-sm"
             type="button"
           >
             Sorting: {`${sorting ? "Yes" : "No"}`}
           </button>
+          <button
+            className="m-2 p-6 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-sm"
+            onClick={() => downloadCsv(data, "itworks.csv")}
+          >
+            Download csv
+          </button>
         </div>
       </div>
-      <div className="relative shadow-md sm:rounded-lg bg-green-400 mx-auto w-screen overflow-auto">
+      <div className="relative shadow-md sm:rounded-lg bg-green-400/60 mx-auto w-screen overflow-auto">
         <table
-          className="w-screen max-w-4xl m-2 text-sm text-left text-gray-500 dark:text-gray-400 mb-10"
+          className="w-screen max-w-4xl m-2 text-sm text-left text-gray-500 dark:text-gray-400"
           {...getTableProps()}
         >
           <thead className="sticky text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -419,32 +454,6 @@ function Table({
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
-          <div className="lg:ml-6 flex items-center">
-            <button
-              className="bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-sm"
-              onClick={() => downloadCsv(data, "itworks.csv")}
-            >
-              Download csv
-            </button>
-            <div className="text-white ml-4 cursor-pointer focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray bg-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 w-8 h-8 rounded flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="icon icon-tabler icon-tabler-plus"
-                width={28}
-                height={28}
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" />
-                <line x1={12} y1={5} x2={12} y2={19} />
-                <line x1={5} y1={12} x2={19} y2={12} />
-              </svg>
             </div>
           </div>
         </div>
