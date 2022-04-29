@@ -1,18 +1,11 @@
-import ImportFile from "./component/ImportFile";
-import ImpFileReactTable from "./component/ImpFileReactTable";
-import ReactDataGridTable from "./component/ReactDataGridTable";
-import Index from "./component/TailwindTable";
+import Footer from "./component/Footer";
+import ImpFileReactTable from "./component/cc1/ImpFileReactTable";
 
 const App = () => {
   return (
     <>
-      {
-        //  <ImportFile />
-        // <ReactDataGridTable />
-        // <Index />
-        // <Table />
-      }
       <ImpFileReactTable />
+      <Footer />
     </>
   );
 };

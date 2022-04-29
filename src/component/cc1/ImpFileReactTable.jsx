@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as XLSX from "xlsx";
 
-import Table from "../component/Table";
+import Table from "./Table";
 import TopBar from "./TopBar";
 import CreateRowModal from "./CreateRowModal";
 import Chart from "./Chart";
 
-import { loadedColumns, loadedList } from "../csvs/csvData.js";
+import { loadedColumns, loadedList } from "../../csvs/csvData.js";
 
 const ImpFileReactTable = () => {
   const [columns, setColumns] = useState([]);
@@ -48,15 +48,6 @@ const ImpFileReactTable = () => {
 
     setChartData(myArray);
   }, [data, selectedColumnForChart]);
-
-  useEffect(() => {
-    console.log({ columns });
-    console.log({ chartData });
-
-    // columns.map((column) => {
-    //   console.log(column.accessor);
-    // });
-  }, [columns, chartData]);
 
   // process CSV data
   const processData = (dataString) => {
@@ -180,7 +171,7 @@ const ImpFileReactTable = () => {
   };
 
   return (
-    <div className="w-screen flex flex-col justify-center place-items-center overflow-x-hidden bg-yellow-300/10">
+    <div className="w-full flex flex-col justify-center place-items-center overflow-x-hidden bg-yellow-300/10">
       <TopBar fileName={fileName} handleFileUpload={handleFileUpload} />
 
       <Table
@@ -195,7 +186,7 @@ const ImpFileReactTable = () => {
         toggleModal={toggleModal}
       />
 
-      {chartData ? (
+      {chartData && selectedColumnForChart ? (
         <Chart
           selectedColumnForChart={selectedColumnForChart}
           setSelectedColumnForChart={setSelectedColumnForChart}
@@ -212,74 +203,6 @@ const ImpFileReactTable = () => {
         toggleModal={toggleModal}
         toggle={toggle}
       />
-
-      {/* 
-          Pagination can be built however you'd like. 
-          This is just a very basic UI implementation:
-        */}
-      {
-        //   <div className="p-1 bg-red-200 fixed top-0 w-full text-center">
-        //   <button
-        //     className="sm:p-1 bg-gray-400 border border-gray-500 rounded-l-full"
-        //     onClick={() => gotoPage(0)}
-        //     disabled={!canPreviousPage}
-        //   >
-        //     {"|<"}
-        //   </button>{" "}
-        //   <button
-        //     className="sm:p-1 bg-gray-400 border border-gray-500 mx-1"
-        //     onClick={() => previousPage()}
-        //     disabled={!canPreviousPage}
-        //   >
-        //     {"<"}
-        //   </button>{" "}
-        //   <button
-        //     onClick={() => nextPage()}
-        //     disabled={!canNextPage}
-        //     className="sm:p-1 bg-gray-400 border border-gray-500 mr-1"
-        //   >
-        //     {">"}
-        //   </button>{" "}
-        //   <button
-        //     onClick={() => gotoPage(pageCount - 1)}
-        //     disabled={!canNextPage}
-        //     className="sm:p-1 bg-gray-400 border border-gray-500 rounded-r-full"
-        //   >
-        //     {">|"}
-        //   </button>{" "}
-        //   <span>
-        //     Page{" "}
-        //     <strong>
-        //       {pageIndex + 1} of {pageOptions.length}
-        //     </strong>{" "}
-        //   </span>
-        //   <span>
-        //     | Go to Wpage:{" "}
-        //     <input
-        //       type="number"
-        //       defaultValue={pageIndex + 1}
-        //       onChange={(e) => {
-        //         const page = e.target.value ? Number(e.target.value) - 1 : 0;
-        //         gotoPage(page);
-        //       }}
-        //       style={{ width: "50px" }}
-        //     />
-        //   </span>{" "}
-        //   <select
-        //     className="focus:outline-none border  focus:border-gray-800 focus:shadow-outline-gray text-base form-select block w-full py-2 px-2 xl:px-3 rounded text-gray-600 dark:text-gray-400 appearance-none"
-        //     value={pageSize}
-        //     onChange={(e) => {
-        //       setPageSize(Number(e.target.value));
-        //     }}
-        //   >
-        //     {[10, 20, 30, 40, 50].map((pageSize) => (
-        //       <option key={pageSize} value={pageSize}>
-        //         Show {pageSize}
-        //       </option>
-        //     ))}
-        //   </select>
-        // </div>
-      }
     </div>
   );
 };

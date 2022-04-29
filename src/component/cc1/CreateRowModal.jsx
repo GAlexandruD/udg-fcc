@@ -48,9 +48,11 @@ const CreateRowModal = ({
             <button
               onClick={(e) => {
                 e.preventDefault();
+                console.log("Current element to inser is: ", inputEl.current);
                 atTheEnd
                   ? setData([...data, inputEl.current])
                   : setData([inputEl.current, ...data]);
+                inputEl.current = {};
                 toggleModal();
               }}
               type="submit"

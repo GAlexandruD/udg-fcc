@@ -1,4 +1,4 @@
-﻿export const loadedColumns = [
+export const loadedColumns = [
   {
     Header: "Hauptartikelnr",
     accessor: "Hauptartikelnr",
