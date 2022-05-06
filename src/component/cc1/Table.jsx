@@ -59,6 +59,8 @@ function Table({
   resetData,
   onSortingChange,
   constructAnotherRow,
+  toggleCharts,
+  showCharts,
 }) {
   const {
     getTableProps,
@@ -90,16 +92,15 @@ function Table({
     useResizeColumns
   );
   const downloadCsv = (json, fileName) => {
-    console.log("download csv");
     const worksheet = XLSX.utils.json_to_sheet(json);
     const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
     XLSX.writeFile(workbook, fileName, { bookType: "csv" });
   };
 
   return (
-    <>
-      <div className="flex">
-        <div className="flex flex-col sm:flex-row">
+    <div className="flex flex-col justify-center place-items-center">
+      <div className="flex pb-2">
+        <div className="flex flex-col md:flex-row">
           <button
             className="p-4 m-2 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md"
             type="button"
@@ -120,85 +121,87 @@ function Table({
             className="bg-gray-200 m-2 p-4 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md"
             type="button"
           >
-            Sorting: {`${sorting ? "Yes" : "No"}`}
+            Sorting: {`${sorting ? "Yes" : "No "}`}
           </button>
           <button
-            className="m-2 p-4 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md"
             onClick={() => downloadCsv(data, "itworks.csv")}
+            className="m-2 p-4 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md"
           >
             Download csv
           </button>
         </div>
       </div>
-      <div className="shadow-md sm:rounded-lg bg-green-400/20 mx-auto w-full overflow-auto grid justify-items-center">
-        <table
-          className="w-full max-w-4xl m-2 text-sm text-left text-gray-500 dark:text-gray-400"
-          {...getTableProps()}
-        >
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            {headerGroups.map((headerGroup) => (
-              <tr className="" {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    scope="col"
-                    {...column.getHeaderProps(
-                      sorting ? column.getSortByToggleProps() : ""
-                    )}
-                    className="bg-gray-200 min-w-[60px] px-4 py-2"
-                  >
-                    <span className="">
-                      {column.render("Header")}
-                      <span>
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <IoIosArrowDown />
+      <div className="shadow-md w-full overflow-x-scroll flex place-items-center">
+        <div className="flex bg-green-700/30 mx-auto">
+          <table
+            className="max-w-4xl m-2 text-sm text-left text-gray-500"
+            {...getTableProps()}
+          >
+            <thead className="text-xs text-gray-700 uppercase">
+              {headerGroups.map((headerGroup) => (
+                <tr className="" {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      scope="col"
+                      {...column.getHeaderProps(
+                        sorting ? column.getSortByToggleProps() : ""
+                      )}
+                      className="bg-gray-200 px-4 py-2"
+                    >
+                      <span className="">
+                        {column.render("Header")}
+                        <span>
+                          {column.isSorted ? (
+                            column.isSortedDesc ? (
+                              <IoIosArrowDown />
+                            ) : (
+                              <IoIosArrowUp />
+                            )
                           ) : (
-                            <IoIosArrowUp />
-                          )
-                        ) : (
-                          <IoIosArrowUp className="invisible" />
-                        )}
+                            <IoIosArrowUp className="invisible" />
+                          )}
+                        </span>
+                        <span
+                          {...column.getResizerProps()}
+                          className={`touch-none inline-block bg-gray-500 w-[1px] h-full absolute right-0 top-0 translate-x-1/2 z-10 ${
+                            column.isResizing ? "bg-red-500 w-1" : ""
+                          }`}
+                        ></span>
                       </span>
-                      <span
-                        {...column.getResizerProps()}
-                        className={`touch-none inline-block bg-gray-500 w-[1px] h-full absolute right-0 top-0 translate-x-1/2 z-10 ${
-                          column.isResizing ? "bg-red-500 w-1" : ""
-                        }`}
-                      ></span>
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="table-row-group" {...getTableBodyProps()}>
-            {page.map((row, i) => {
-              prepareRow(row);
-              return (
-                <tr
-                  className="bg-yellow-50 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  {...row.getRowProps()}
-                >
-                  {row.cells.map((cell) => {
-                    return (
-                      <td
-                        className="relative min-w-[60px] px-3 py-2 border"
-                        {...cell.getCellProps()}
-                      >
-                        {cell.render("Cell")}
-                      </td>
-                    );
-                  })}
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody className="table-row-group" {...getTableBodyProps()}>
+              {page.map((row, i) => {
+                prepareRow(row);
+                return (
+                  <tr
+                    className="bg-yellow-50 border-b  hover:bg-gray-50 "
+                    {...row.getRowProps()}
+                  >
+                    {row.cells.map((cell) => {
+                      return (
+                        <td
+                          className="relative min-w-[60px] px-3 py-2 border"
+                          {...cell.getCellProps()}
+                        >
+                          {cell.render("Cell")}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div className="py-10 w-full flex flex-col sm:flex-row items-center justify-center">
+      <div className="py-2 w-full flex flex-col sm:flex-row items-center justify-center">
         <div id="goToPage">
-          <p className="text-base text-gray-600 dark:text-gray-400">
+          <p className="text-base text-gray-600 ">
             Go to page:{" "}
             <input
               type="number"
@@ -211,7 +214,7 @@ function Table({
             />
           </p>
         </div>
-        <div className="flex flex-row sm:border-l sm:border-r border-gray-300 dark:border-gray-200 py-3 sm:py-0 sm:px-6">
+        <div className="flex flex-row sm:border-l sm:border-r border-gray-300  py-3 sm:py-0 sm:px-6">
           <p
             className="text-base text-gray-600 dark:text-gray-400"
             id="page-view"
@@ -262,7 +265,7 @@ function Table({
           </button>
         </div>
         <div className="relative w-32 z-10">
-          <div className="pointer-events-none text-gray-600 dark:text-gray-400 absolute inset-0 m-auto mr-2 xl:mr-4 z-0 w-5 h-5">
+          <div className="pointer-events-none text-gray-600 absolute inset-0 m-auto mr-2 xl:mr-4 z-0 w-5 h-5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="icon cursor-pointer icon-tabler icon-tabler-chevron-down"
@@ -281,7 +284,7 @@ function Table({
           </div>
           <select
             aria-label="Selected tab"
-            className="focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray text-base form-select block w-full py-2 px-2 xl:px-3 rounded text-gray-600 dark:text-gray-400 appearance-none bg-transparent"
+            className="focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray text-base form-select block w-full py-2 px-2 xl:px-3 rounded text-gray-600 appearance-none bg-transparent"
             value={pageSize}
             onChange={(e) => {
               setPageSize(Number(e.target.value));
@@ -295,7 +298,30 @@ function Table({
           </select>
         </div>
       </div>
-    </>
+      <button
+        className="m-2 p-4 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md focus:border-0"
+        onClick={toggleCharts}
+      >
+        Click to {showCharts ? "Hide" : "Show"} Chart
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`ml-3 transition-all duration-1000 ${
+            showCharts ? "rotate-180" : null
+          }`}
+          width={28}
+          height={28}
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" />
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+    </div>
   );
 }
 

@@ -4,49 +4,69 @@ import * as XLSX from "xlsx";
 import Table from "./Table";
 import TopBar from "./TopBar";
 import CreateRowModal from "./CreateRowModal";
-import Chart from "./Chart";
-
-import { loadedColumns, loadedList } from "../../csvs/csvData.js";
+import Charts from "./Chart";
 
 const ImpFileReactTable = () => {
-  const [columns, setColumns] = useState([]);
-  const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState();
-  const [skipPageReset, setSkipPageReset] = useState(false);
-  const [sorting, setSorting] = useState(false);
-  const inputEl = useRef({});
-  const [toggle, setToggle] = useState(false);
-  const [chartData, setChartData] = useState({});
-  const [selectedColumnForChart, setSelectedColumnForChart] =
-    useState("Hersteller");
+  const [unmemoizedColumns, setUnmemoizedColumns] = useState([]);
 
-  const [fileName, setFileName] = useState(null);
-  const [pending, setPending] = useState(true);
+  const columns = useMemo(() => unmemoizedColumns, [unmemoizedColumns]);
+
+  const [unmemoizedData, setUnmemoizedData] = useState([]); // Array of rows to memoize
+  const data = useMemo(() => unmemoizedData, [unmemoizedData]); // Array of rows})
+  const [originalData, setOriginalData] = useState(); // Array of rows (original)
+  const [skipPageReset, setSkipPageReset] = useState(false); // Flag to skip resetting page
+  const [sorting, setSorting] = useState(false); // Flag to sort by column
+  const inputEl = useRef({}); // Input element
+  const [toggle, setToggle] = useState(false); // Flag to toggle modal visibility
+  const [chartData, setChartData] = useState({}); // Chart data
+  const [selectedColumnForChart, setSelectedColumnForChart] = useState(""); // Selected column for chart
+  const [showCharts, setShowCharts] = useState(false); // Flag to show charts
+
+  const [fileName, setFileName] = useState(null); // File name
+  const [pending, setPending] = useState(false); // Flag to show loading
+  const [pendingChart, setPendingChart] = useState(false); // Flag to show loading of chart
 
   const onSortingChange = () => {
     setSorting(!sorting);
   };
 
+  const toggleCharts = () => {
+    setShowCharts(!showCharts);
+    if (!pendingChart) {
+      setPendingChart(true);
+    }
+  };
+
+  const handleColumnChangeForChart = (e) => {
+    if (e.target.value && e.target.value !== selectedColumnForChart) {
+      setPendingChart(true);
+      setSelectedColumnForChart(e.target.value);
+    }
+  };
+
+  //Set the data for chart:
   useEffect(() => {
-    //Set the data for chart:
+    if (data.length > 0) {
+      //1. Get the data from the table by column name
+      const columnArray = data.map((item) => {
+        return item[selectedColumnForChart]; //returns an array of values
+      });
 
-    //1. Get the data from the table by column name
-    const columnArray = data.map((item) => {
-      return item[selectedColumnForChart]; //returns an array of values
-    });
+      //2. A function to find all distinct occurences of the object property, sorted by key, in the data array
 
-    //2. A function to find all distinct occurences of the object property, sorted by key, in the data array
+      const myArray = columnArray.reduce(function (accumulator, currentValue) {
+        return (
+          accumulator[currentValue]
+            ? ++accumulator[currentValue]
+            : (accumulator[currentValue] = 1),
+          accumulator
+        );
+      }, {});
 
-    const myArray = columnArray.reduce(function (accumulator, currentValue) {
-      return (
-        accumulator[currentValue]
-          ? ++accumulator[currentValue]
-          : (accumulator[currentValue] = 1),
-        accumulator
-      );
-    }, {});
+      setChartData(myArray);
 
-    setChartData(myArray);
+      // setPendingChart(false);
+    }
   }, [data, selectedColumnForChart]);
 
   // process CSV data
@@ -86,28 +106,21 @@ const ImpFileReactTable = () => {
       Header: element,
       accessor: element,
     }));
-    setData(list);
-    console.log({ list });
+    setUnmemoizedData(list);
+
     setOriginalData(list);
-    // const memoizedRows = useMemo(() => rows, [rows]);
-    setColumns(columns);
+    setUnmemoizedColumns(columns);
+    setSelectedColumnForChart(columns[1].accessor);
 
     setPending(false);
   };
-
-  //Auto loading some data to work for in development
-  useEffect(() => {
-    setFileName("Artikel.csv");
-    setData(loadedList);
-    setColumns(loadedColumns);
-    setOriginalData(loadedList);
-  }, []);
 
   // handle file upload
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFileName(file.name);
+      setPending(true);
       const reader = new FileReader();
       reader.onload = (event) => {
         /* Parse data */
@@ -129,7 +142,7 @@ const ImpFileReactTable = () => {
   const updateMyData = (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
     setSkipPageReset(true);
-    setData((old) =>
+    setUnmemoizedData((old) =>
       old.map((row, index) => {
         if (index === rowIndex) {
           return {
@@ -142,7 +155,7 @@ const ImpFileReactTable = () => {
     );
   };
 
-  // After data chagnes, we turn the flag back off
+  // After data changes, we turn the flag back off
   // so that if data actually changes when we're not
   // editing it, the page is reset
   useEffect(() => {
@@ -151,7 +164,7 @@ const ImpFileReactTable = () => {
 
   // Let's add a data resetter/randomizer to help
   // illustrate that flow...
-  const resetData = () => setData(originalData);
+  const resetData = () => setUnmemoizedData(originalData);
 
   // I am returning a new row
   const constructAnotherRow = () => {
@@ -171,27 +184,38 @@ const ImpFileReactTable = () => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-center place-items-center overflow-x-hidden bg-yellow-300/10">
-      <TopBar fileName={fileName} handleFileUpload={handleFileUpload} />
-
-      <Table
-        columns={columns}
-        data={data}
-        updateMyData={updateMyData}
-        skipPageReset={skipPageReset}
-        sorting={sorting}
-        resetData={resetData}
-        onSortingChange={onSortingChange}
-        constructAnotherRow={constructAnotherRow}
-        toggleModal={toggleModal}
+    <>
+      <TopBar
+        fileName={fileName}
+        handleFileUpload={handleFileUpload}
+        pending={pending}
       />
 
-      {chartData && selectedColumnForChart ? (
-        <Chart
+      {data.length === 0 ? (
+        <div className="text-center">*** No data loaded ***</div>
+      ) : (
+        <Table
+          columns={columns}
+          data={data}
+          updateMyData={updateMyData}
+          skipPageReset={skipPageReset}
+          sorting={sorting}
+          resetData={resetData}
+          onSortingChange={onSortingChange}
+          constructAnotherRow={constructAnotherRow}
+          toggleModal={toggleModal}
+          toggleCharts={toggleCharts}
+          showCharts={showCharts}
+        />
+      )}
+
+      {showCharts ? (
+        <Charts
           selectedColumnForChart={selectedColumnForChart}
-          setSelectedColumnForChart={setSelectedColumnForChart}
+          handleColumnChangeForChart={handleColumnChangeForChart}
           chartData={chartData}
           columns={columns}
+          pendingChart={pendingChart}
         />
       ) : null}
 
@@ -199,11 +223,11 @@ const ImpFileReactTable = () => {
         columns={columns}
         inputEl={inputEl}
         data={data}
-        setData={setData}
+        setData={setUnmemoizedData}
         toggleModal={toggleModal}
         toggle={toggle}
       />
-    </div>
+    </>
   );
 };
 
