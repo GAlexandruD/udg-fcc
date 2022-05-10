@@ -10,82 +10,87 @@ const Charts = ({
   pendingChart,
 }) => {
   const [limitChartData, setLimitChartData] = useState("10");
-
-  const chartTable = Object.entries(chartData);
   const [googleChartData, setGoogleChartData] = useState([]);
   const [toggleChartType, setToggleChartType] = useState("pie");
 
   //Prepare data for chart
 
-  useEffect(
-    () => {
-      const googleNewData = () => {
-        const arrayToReturn = [["Column", selectedColumnForChart]];
-        if (limitChartData === "all") {
-          chartTable.map(([key, value]) => arrayToReturn.push([key, value]));
-        } else {
-          chartTable
-            .slice(0, Number(limitChartData))
-            .map(([key, value]) => arrayToReturn.push([key, value]));
-        }
-        return arrayToReturn;
-      };
+  useEffect(() => {
+    const googleNewData = () => {
+      const arrayToReturn = [["Content", selectedColumnForChart]];
+      if (limitChartData === "all") {
+        chartData.map(([key, value]) => arrayToReturn.push([key, value]));
+      } else {
+        chartData
+          .slice(0, Number(limitChartData))
+          .map(([key, value]) => arrayToReturn.push([key, value]));
+      }
+      return arrayToReturn;
+    };
 
-      setGoogleChartData(googleNewData());
-    },
-    [limitChartData, toggleChartType],
-    selectedColumnForChart
-  );
+    console.log({ chartData });
+
+    setGoogleChartData(googleNewData());
+  }, [limitChartData, toggleChartType, selectedColumnForChart, chartData]);
 
   return googleChartData.length > 0 ? (
     <div className="w-full h-auto flex flex-col justify-center place-items-center">
-      <div className="bg-green-400">
-        <label htmlFor="column" className="text-xl text-gray-700 m-2 ">
-          Chart for:
-        </label>
-        <select
-          id="columns"
-          name="columns"
-          defaultChecked={selectedColumnForChart}
-          className="w-min h-8 p-1 mb-6 border border-gray-400/80 rounded-lg text-gray-800"
-          onChange={(e) => handleColumnChangeForChart(e)}
+      <div className="flex flex-col md:flex-row justify-center place-items-center">
+        <button
+          className="m-2 p-4 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md focus:border-0"
+          onClick={() =>
+            toggleChartType === "pie"
+              ? setToggleChartType("bar")
+              : setToggleChartType("pie")
+          }
         >
-          {columns.map((column, index) => (
-            <option value={column.Header} key={index}>
-              {column.Header}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="bg-red-400">
-        <label htmlFor="column" className="text-xl text-gray-700 m-2 ">
-          Limit results to:
-        </label>
-        <select
-          id="columns"
-          name="columns"
-          defaultChecked={"10"}
-          className="w-min h-8 p-1 mb-6 border border-gray-400/80 rounded-lg text-gray-800"
-          onChange={(e) => setLimitChartData(e.target.value)}
-        >
-          {["10", "20", "30", "40", "50", "all"].map((column, index) => (
-            <option value={column} key={index}>
-              {column}
-            </option>
-          ))}
-        </select>
-      </div>
+          Showing {toggleChartType === "pie" ? "Pie" : "Bar"} Chart
+        </button>
 
-      <button
-        className="m-2 p-4 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md focus:border-0"
-        onClick={() =>
-          toggleChartType === "pie"
-            ? setToggleChartType("bar")
-            : setToggleChartType("pie")
-        }
-      >
-        Showing {toggleChartType === "pie" ? "Pie" : "Bar"} Chart
-      </button>
+        <div className="flex justify-center place-items-center md:mx-6 m-2">
+          <label
+            htmlFor="column"
+            className="bg-gray-100 text-md text-indigo-700 p-1 rounded"
+          >
+            Limit results to:
+          </label>
+          <select
+            id="columns"
+            name="columns"
+            defaultChecked={"10"}
+            className="border border-grey-400 rounded p-1 text-md bg-white text-indigo-700 focus:outline-none"
+            onChange={(e) => setLimitChartData(e.target.value)}
+          >
+            {["10", "20", "30", "40", "50", "all"].map((column, index) => (
+              <option value={column} key={index}>
+                {column}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex justify-center place-items-center m-2">
+          <label
+            htmlFor="column"
+            className="bg-gray-100 text-md text-indigo-700 p-1 rounded"
+          >
+            Chart for:
+          </label>
+          <select
+            id="columns"
+            name="columns"
+            defaultChecked={selectedColumnForChart}
+            className="border border-grey-400 rounded text-indigo-700 bg-white p-1 focus:outline-none"
+            onChange={(e) => handleColumnChangeForChart(e)}
+          >
+            {columns.map((column, index) => (
+              <option value={column.Header} key={index}>
+                {column.Header}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <div
         className="h-full w-full flex flex-col bg-green-400/20 justify-center place-items-center"
@@ -105,7 +110,6 @@ const Charts = ({
             width="100%"
             height="400px"
             data={googleChartData}
-            options={{ title: `Selection: ${selectedColumnForChart}` }}
           />
         )}
       </div>

@@ -18,7 +18,7 @@ const ImpFileReactTable = () => {
   const [sorting, setSorting] = useState(false); // Flag to sort by column
   const inputEl = useRef({}); // Input element
   const [toggle, setToggle] = useState(false); // Flag to toggle modal visibility
-  const [chartData, setChartData] = useState({}); // Chart data
+  const [chartData, setChartData] = useState([]); // Chart data
   const [selectedColumnForChart, setSelectedColumnForChart] = useState(""); // Selected column for chart
   const [showCharts, setShowCharts] = useState(false); // Flag to show charts
 
@@ -61,11 +61,12 @@ const ImpFileReactTable = () => {
             : (accumulator[currentValue] = 1),
           accumulator
         );
-      }, {});
+      }, []);
 
-      setChartData(myArray);
+      const sortedArray = Object.entries(myArray).sort((a, b) => b[1] - a[1]);
+      console.log({ sortedArray });
 
-      // setPendingChart(false);
+      setChartData(sortedArray);
     }
   }, [data, selectedColumnForChart]);
 

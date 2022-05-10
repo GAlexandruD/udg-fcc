@@ -302,7 +302,7 @@ function Table({
         className="m-2 p-4 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md focus:border-0"
         onClick={toggleCharts}
       >
-        Click to {showCharts ? "Hide" : "Show"} Chart
+        {showCharts ? "Hide" : "Show"} Chart
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className={`ml-3 transition-all duration-1000 ${
