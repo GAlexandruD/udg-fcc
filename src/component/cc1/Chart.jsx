@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
 import Chart from "react-google-charts";
+import LabelSelect from "./LabelSelect";
+import MyButton from "./MyButton";
 
 const Charts = ({
   chartData,
@@ -36,80 +38,70 @@ const Charts = ({
   return googleChartData.length > 0 ? (
     <div className="w-full h-auto flex flex-col justify-center place-items-center">
       <div className="flex flex-col md:flex-row justify-center place-items-center">
-        <button
-          className="m-2 p-4 bg-gray-200 transition duration-150 ease-in-out focus:outline-none border border-transparent focus:border-gray-800 focus:shadow-outline-gray hover:bg-gray-300 rounded text-indigo-700 px-5 h-8 flex items-center text-md focus:border-0"
+        <MyButton
           onClick={() =>
             toggleChartType === "pie"
               ? setToggleChartType("bar")
               : setToggleChartType("pie")
           }
-        >
-          Showing {toggleChartType === "pie" ? "Pie" : "Bar"} Chart
-        </button>
+          text={<>Showing {toggleChartType === "pie" ? "Pie" : "Bar"} Chart</>}
+        />
 
-        <div className="flex justify-center place-items-center md:mx-6 m-2">
-          <label
-            htmlFor="column"
-            className="bg-gray-100 text-md text-indigo-700 p-1 rounded"
-          >
-            Limit results to:
-          </label>
-          <select
-            id="columns"
-            name="columns"
-            defaultChecked={"10"}
-            className="border border-grey-400 rounded p-1 text-md bg-white text-indigo-700 focus:outline-none"
-            onChange={(e) => setLimitChartData(e.target.value)}
-          >
-            {["10", "20", "30", "40", "50", "all"].map((column, index) => (
+        <LabelSelect
+          onChange={(e) => setLimitChartData(e.target.value)}
+          labelText="Limit results to:"
+          id="results"
+          defaultChecked={"10"}
+          selectFields={["10", "20", "30", "40", "50", "all"].map(
+            (column, index) => (
               <option value={column} key={index}>
                 {column}
               </option>
-            ))}
-          </select>
-        </div>
+            )
+          )}
+        />
 
-        <div className="flex justify-center place-items-center m-2">
-          <label
-            htmlFor="column"
-            className="bg-gray-100 text-md text-indigo-700 p-1 rounded"
-          >
-            Chart for:
-          </label>
-          <select
-            id="columns"
-            name="columns"
-            defaultChecked={selectedColumnForChart}
-            className="border border-grey-400 rounded text-indigo-700 bg-white p-1 focus:outline-none"
-            onChange={(e) => handleColumnChangeForChart(e)}
-          >
-            {columns.map((column, index) => (
-              <option value={column.Header} key={index}>
-                {column.Header}
-              </option>
-            ))}
-          </select>
-        </div>
+        <LabelSelect
+          onChange={(e) => handleColumnChangeForChart(e)}
+          labelText="Chart for:"
+          selectFields={columns.map((column, index) => (
+            <option value={column.Header} key={index}>
+              {column.Header}
+            </option>
+          ))}
+          defaultChecked={selectedColumnForChart}
+          id="columns"
+        />
       </div>
 
       <div
-        className="h-full w-full flex flex-col bg-green-400/20 justify-center place-items-center"
+        className="h-full w-full flex flex-col justify-center place-items-center"
         id="charts"
       >
         {toggleChartType === "pie" ? (
           <Chart
             chartType="PieChart"
             data={googleChartData}
-            options={{ title: `Selection: ${selectedColumnForChart}` }}
+            options={{
+              title: `Selection: ${selectedColumnForChart}`,
+              backgroundColor: "#fefce8",
+              is3D: true,
+            }}
             width="100%"
             height="400px"
           />
         ) : (
           <Chart
-            chartType="Bar"
+            chartType="BarChart"
             width="100%"
             height="400px"
             data={googleChartData}
+            options={{
+              title: `Selection: ${selectedColumnForChart}`,
+              backgroundColor: "#fefce8",
+              legend: { position: "none" },
+              colors: ["#22c55e"],
+            }}
           />
         )}
       </div>

@@ -196,6 +196,7 @@ const ImpFileReactTable = () => {
         <div className="text-center">*** No data loaded ***</div>
       ) : (
         <Table
+          fileName={fileName}
           columns={columns}
           data={data}
           updateMyData={updateMyData}

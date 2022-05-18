@@ -1,4 +1,5 @@
 import { useState } from "react";
+import MyButton from "./MyButton";
 
 const CreateRowModal = ({
   columns,
@@ -16,12 +17,12 @@ const CreateRowModal = ({
       aria-hidden="true"
       className="fixed top-0 left-0 z-50 w-max h-full shadow-lg overflow-y-scroll"
     >
-      <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <div className="relative rounded-lg shadow">
         <div className="flex justify-end p-2 bg-transparent">
           <button
             onClick={toggleModal}
             type="button"
-            className="text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+            className="rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
             data-modal-toggle="new-row-modal"
           >
             <svg
@@ -42,7 +43,7 @@ const CreateRowModal = ({
           className="px-6 pb-4 space-y-6 lg:px-8 sm:pb-6 xl:pb-8"
           action="#"
         >
-          <button
+          <MyButton
             onClick={(e) => {
               e.preventDefault();
               atTheEnd
@@ -52,32 +53,29 @@ const CreateRowModal = ({
               toggleModal();
             }}
             type="submit"
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Add row
-          </button>
-          <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-            Add a new row
-          </h3>
+            text="Add row"
+          />
+
           {columns.map((column, index) => {
             return (
               <div key={index} className="space-y-4">
-                <label
-                  htmlFor={column.accessor}
-                  className="block text-sm font-medium leading-5 text-gray-700 dark:text-white"
-                >
-                  {column.Header}
-                </label>
-                <div className="mt-1 relative rounded-md shadow-sm">
+                <div className="relative">
                   <input
                     onChange={(e) =>
                       (inputEl.current[column.accessor] = e.target.value)
                     }
                     id={column.accessor}
+                    name={column.accessor}
                     type="text"
-                    className="form-input block w-full sm:text-sm sm:leading-5"
                     placeholder={column.Header}
+                    className="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-rose-600"
                   />
+                  <label
+                    htmlFor={column.accessor}
+                    class="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm"
+                  >
+                    {column.Header}
+                  </label>
                 </div>
               </div>
             );
@@ -97,28 +95,25 @@ const CreateRowModal = ({
                 />
               </div>
               <div className="ml-3 text-sm">
-                <label
-                  htmlFor="end"
-                  className="font-medium text-gray-900 dark:text-gray-300"
-                >
-                  Add data to the end of the table
+                <label htmlFor="end" className="font-medium">
+                  To the end of the table
                 </label>
               </div>
             </div>
           </div>
-          <button
+
+          <MyButton
             onClick={(e) => {
               e.preventDefault();
               atTheEnd
                 ? setData([...data, inputEl.current])
                 : setData([inputEl.current, ...data]);
+              inputEl.current = {};
               toggleModal();
             }}
             type="submit"
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Add row
-          </button>
+            text="Add row"
+          />
         </form>
       </div>
     </div>
