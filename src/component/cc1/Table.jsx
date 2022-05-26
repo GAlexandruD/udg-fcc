@@ -192,8 +192,20 @@ function Table({
               type="number"
               defaultValue={pageIndex + 1}
               onChange={(e) => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                gotoPage(page);
+                const enteredValue = Number(e.target.value);
+
+                if (enteredValue > 0 && enteredValue <= pageOptions.length) {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  gotoPage(page);
+                } else {
+                  if (enteredValue > pageOptions.length) {
+                    e.target.value = "1";
+                    gotoPage(0);
+                  } else {
+                    e.target.value = pageOptions.length;
+                    gotoPage(pageOptions.length - 1);
+                  }
+                }
               }}
               style={{ width: "50px" }}
             />

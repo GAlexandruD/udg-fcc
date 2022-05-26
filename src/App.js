@@ -2,6 +2,7 @@ import Footer from "./component/Footer";
 import ImpFileReactTable from "./component/cc1/CodeChallengeOne";
 import { useEffect, useState } from "react";
 import CodeChallengeSelection from "./component/CodeChallengeSelection";
+import CodeChallengeTwo from "./component/cc2/CodeChallengeTwo";
 
 const App = () => {
   const [lesson, setLesson] = useState("1");
@@ -16,7 +17,7 @@ const App = () => {
       {lesson === "1" ? (
         <ImpFileReactTable />
       ) : lesson === "2" ? (
-        <div className="text-center">Lesson two</div>
+        <CodeChallengeTwo />
       ) : (
         <div className="text-center">Lesson three</div>
       )}
