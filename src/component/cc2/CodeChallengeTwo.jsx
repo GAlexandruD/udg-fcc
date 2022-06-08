@@ -2,8 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import MyButton from "../cc1/MyButton";
 import exportAsImage from "../utils/exportAsImage";
 
+import { SketchPicker } from "react-color";
+
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
+import ColorPicker from "./ColorPicker";
 
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
@@ -15,6 +18,11 @@ const CodeChallengeTwo = () => {
 
   const [cropData, setCropData] = useState(null);
   const [cropper, setCropper] = useState();
+
+  const [colorTextTop, setColorTextTop] = useState("#fff");
+  const [colorBgTop, setColorBgTop] = useState("#050505");
+  const [colorTextBottom, setColorTextBottom] = useState("#fff");
+  const [colorBgBottom, setColorBgBottom] = useState("#050505");
 
   const onChange = (e) => {
     e.preventDefault();
@@ -76,10 +84,21 @@ const CodeChallengeTwo = () => {
             value={topText}
             onChange={(e) => setTopText(e.target.value)}
           />
-          <MyButton text="Set Changes" onClick={() => setModal("closed")} />
+          <MyButton text="Save Changes" onClick={() => setModal("closed")} />
 
-          <button className="text-white">Select Font</button>
-          <button className="text-white">Select Color</button>
+          <div className="flex justify-center place-items-center bg-transparent">
+            <span className="text-xl text-yellow-50 bg-transparent">
+              Text color
+            </span>
+            <ColorPicker defaultColor="#b4895e" />
+          </div>
+
+          <div className="flex justify-center place-items-center bg-transparent">
+            <span className="text-xl text-yellow-50 bg-transparent">
+              Background color
+            </span>
+            <ColorPicker defaultColor="#ad489e" />
+          </div>
         </div>
       )}
 
@@ -129,10 +148,14 @@ const CodeChallengeTwo = () => {
           >
             <div className="absolute top-0 w-[800px] h-[600px] bg-transparent flex flex-col place-content-between">
               <div
-                className="bg-yellow-500/60 h-16 cursor-pointer flex justify-center place-items-center"
+                style={{ backgroundColor: colorBgTop, opacity: 0.4 }}
+                className="h-16 cursor-pointer flex justify-center place-items-center"
                 onClick={() => setModal("top")}
               >
-                <h1 className=" bg-transparent text-5xl">
+                <h1
+                  className=" bg-transparent text-5xl"
+                  style={{ backgroundColor: colorBgTop, color: colorTextTop }}
+                >
                   {topText ? topText : "Click to add top text"}
                 </h1>
               </div>
