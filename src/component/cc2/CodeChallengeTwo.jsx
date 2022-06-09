@@ -2,26 +2,26 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import MyButton from "../cc1/MyButton";
 import exportAsImage from "../utils/exportAsImage";
 
-import { SketchPicker } from "react-color";
-
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import ColorPicker from "./ColorPicker";
+import Modal from "./Modal";
 
 const defaultSrc =
   "https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg";
 
 const CodeChallengeTwo = () => {
   const [file, setFile] = useState(defaultSrc);
+  const [fileName, setFileName] = useState("child.jpg");
   const [modal, setModal] = useState("closed");
   const [topText, setTopText] = useState("");
+  const [bottomText, setBottomText] = useState("");
 
   const [cropData, setCropData] = useState(null);
   const [cropper, setCropper] = useState();
 
-  const [colorTextTop, setColorTextTop] = useState("#fff");
+  const [colorTextTop, setColorTextTop] = useState("#7ed321");
   const [colorBgTop, setColorBgTop] = useState("#050505");
-  const [colorTextBottom, setColorTextBottom] = useState("#fff");
+  const [colorTextBottom, setColorTextBottom] = useState("#7ed321");
   const [colorBgBottom, setColorBgBottom] = useState("#050505");
 
   const onChange = (e) => {
@@ -37,6 +37,8 @@ const CodeChallengeTwo = () => {
       setFile(reader.result);
     };
     reader.readAsDataURL(files[0]);
+
+    setFileName(e.target.files[0].name);
   };
 
   const getCropData = () => {
@@ -50,8 +52,8 @@ const CodeChallengeTwo = () => {
   const [enableOverflow, setOverflow] = useState(true);
 
   useEffect(() => {
-    console.log({ cropData });
-  }, [cropData]);
+    console.log({ file });
+  }, [file]);
 
   useEffect(() => {
     console.log({ modal });
@@ -71,35 +73,17 @@ const CodeChallengeTwo = () => {
       />
 
       {(modal === "top" || modal === "bottom") && (
-        <div
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-          className="absolute w-screen bg-slate-700/70 flex flex-col justify-center place-items-center h-screen z-10 "
-        >
-          <input
-            className="p-2"
-            type="text"
-            placeholder={`Enter ${modal} text`}
-            value={topText}
-            onChange={(e) => setTopText(e.target.value)}
-          />
-          <MyButton text="Save Changes" onClick={() => setModal("closed")} />
-
-          <div className="flex justify-center place-items-center bg-transparent">
-            <span className="text-xl text-yellow-50 bg-transparent">
-              Text color
-            </span>
-            <ColorPicker defaultColor="#b4895e" />
-          </div>
-
-          <div className="flex justify-center place-items-center bg-transparent">
-            <span className="text-xl text-yellow-50 bg-transparent">
-              Background color
-            </span>
-            <ColorPicker defaultColor="#ad489e" />
-          </div>
-        </div>
+        <Modal
+          modal={modal}
+          setModal={setModal}
+          setTopText={setTopText}
+          topText={topText}
+          setColorTextTop={setColorTextTop}
+          setColorBgTop={setColorBgTop}
+          setBottomText={setBottomText}
+          bottomText={bottomText}
+          setColorTextBottom={setColorTextBottom}
+        />
       )}
 
       {file && !cropData && (
@@ -127,12 +111,6 @@ const CodeChallengeTwo = () => {
             />
           </div>
           <MyButton text="Crop" onClick={getCropData} />
-          <MyButton
-            onClick={() => {
-              exportAsImage(exportRef.current, "test");
-            }}
-            text="Download PNG"
-          />
         </>
       )}
 
@@ -159,13 +137,28 @@ const CodeChallengeTwo = () => {
                   {topText ? topText : "Click to add top text"}
                 </h1>
               </div>
-              <h1 className="bg-red-500/50">Click to add bottom text</h1>
+
+              <div
+                style={{ backgroundColor: colorBgBottom, opacity: 0.5 }}
+                className="h-16 cursor-pointer flex justify-center place-items-center"
+                onClick={() => setModal("bottom")}
+              >
+                <h1
+                  className=" bg-transparent text-5xl"
+                  style={{
+                    backgroundColor: colorBgBottom,
+                    color: colorTextBottom,
+                  }}
+                >
+                  {bottomText ? bottomText : "Click to add bottom text"}
+                </h1>
+              </div>
             </div>
           </div>
 
           <MyButton
             onClick={() => {
-              exportAsImage(exportRef.current, "test");
+              exportAsImage(exportRef.current, fileName);
             }}
             text="Download PNG"
           />

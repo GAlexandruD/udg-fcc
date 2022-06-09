@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
 
-const ColorPicker = ({ defaultColor }) => {
+const ColorPicker = ({ defaultColor, setColorThings }) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [color, setColor] = useState(defaultColor);
 
@@ -14,9 +14,13 @@ const ColorPicker = ({ defaultColor }) => {
   };
 
   const handleChange = (colored) => {
-    setColor(colored.hex);
-    console.log(color);
+    setColor(colored);
+    setColorThings(colored.hex);
   };
+
+  useEffect(() => {
+    console.log({ color });
+  }, [color]);
 
   return (
     <div className="w-12 h-5 m-2">
@@ -25,7 +29,9 @@ const ColorPicker = ({ defaultColor }) => {
         onClick={handleClick}
       >
         <div
-          style={{ backgroundColor: color }}
+          style={{
+            backgroundColor: `rgb(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`,
+          }}
           className="w-12 h-5 border border-slate-700 rounded-sm"
         />
       </div>
