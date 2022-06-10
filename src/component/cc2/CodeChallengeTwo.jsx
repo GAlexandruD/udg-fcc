@@ -15,14 +15,35 @@ const CodeChallengeTwo = () => {
   const [modal, setModal] = useState("closed");
   const [topText, setTopText] = useState("");
   const [bottomText, setBottomText] = useState("");
+  const [font, setFont] = useState("Arial");
 
   const [cropData, setCropData] = useState(null);
   const [cropper, setCropper] = useState();
 
-  const [colorTextTop, setColorTextTop] = useState("#7ed321");
-  const [colorBgTop, setColorBgTop] = useState("#050505");
-  const [colorTextBottom, setColorTextBottom] = useState("#7ed321");
-  const [colorBgBottom, setColorBgBottom] = useState("#050505");
+  const [colorTextTop, setColorTextTop] = useState({
+    r: "143",
+    g: "206",
+    b: "0",
+    a: "1", // green
+  });
+  const [colorBgTop, setColorBgTop] = useState({
+    r: "0",
+    g: "0",
+    b: "0",
+    a: "1", // black
+  });
+  const [colorTextBottom, setColorTextBottom] = useState({
+    r: "143",
+    g: "206",
+    b: "0",
+    a: "1", // green
+  });
+  const [colorBgBottom, setColorBgBottom] = useState({
+    r: "0",
+    g: "0",
+    b: "0",
+    a: "1", // black
+  });
 
   const onChange = (e) => {
     e.preventDefault();
@@ -51,14 +72,6 @@ const CodeChallengeTwo = () => {
 
   const [enableOverflow, setOverflow] = useState(true);
 
-  useEffect(() => {
-    console.log({ file });
-  }, [file]);
-
-  useEffect(() => {
-    console.log({ modal });
-  }, [modal]);
-
   return (
     <div className="text-center flex flex-col justify-center place-items-center">
       <h2 className="m-2">Add Image:</h2>
@@ -83,14 +96,20 @@ const CodeChallengeTwo = () => {
           setBottomText={setBottomText}
           bottomText={bottomText}
           setColorTextBottom={setColorTextBottom}
+          setColorBgBottom={setColorBgBottom}
+          colorTextTop={colorTextTop}
+          colorBgTop={colorBgTop}
+          colorBgBottom={colorBgBottom}
+          colorTextBottom={colorTextBottom}
+          setFont={setFont}
         />
       )}
 
       {file && !cropData && (
         <>
-          <div className="w-[800px] h-[600px]">
+          <div className="w-11/12 h-screen overflow-scroll md: w-">
             <Cropper
-              className="h-full w-full"
+              className="w-[800px] h-[600px]"
               zoomTo={0.5}
               initialAspectRatio={4 / 3}
               preview=".img-preview"
@@ -116,43 +135,39 @@ const CodeChallengeTwo = () => {
 
       {cropData && (
         <>
-          <div
-            ref={exportRef}
-            style={{
-              backgroundColor: "#000",
-              backgroundImage: `url(${cropData})`,
-            }}
-            className="w-[800px] h-[600px] relative bg-contain bg-no-repeat bg-center border-2 border-green-500"
-          >
-            <div className="absolute top-0 w-[800px] h-[600px] bg-transparent flex flex-col place-content-between">
-              <div
-                style={{ backgroundColor: colorBgTop, opacity: 0.4 }}
-                className="h-16 cursor-pointer flex justify-center place-items-center"
+          <div className="w-screen h-screen overflow-scroll">
+            <div
+              ref={exportRef}
+              style={{
+                backgroundColor: "#000",
+                backgroundImage: `url(${cropData})`,
+              }}
+              className="w-[800px] h-[600px] relative bg-contain bg-no-repeat bg-center grid content-between p-8 border-double border-2 border-green-600"
+            >
+              <span
+                style={{
+                  opacity: 1,
+                  color: `rgba(${colorTextTop.r}, ${colorTextTop.g}, ${colorTextTop.b}, ${colorTextTop.a})`,
+                  textShadow: `0px 0px 10px rgba(${colorBgTop.r}, ${colorBgTop.g}, ${colorBgTop.b}, ${colorBgTop.a})`,
+                  fontFamily: font,
+                }}
+                className="h-16 cursor-pointer bg-transparent text-5xl "
                 onClick={() => setModal("top")}
               >
-                <h1
-                  className=" bg-transparent text-5xl"
-                  style={{ backgroundColor: colorBgTop, color: colorTextTop }}
-                >
-                  {topText ? topText : "Click to add top text"}
-                </h1>
-              </div>
-
-              <div
-                style={{ backgroundColor: colorBgBottom, opacity: 0.5 }}
-                className="h-16 cursor-pointer flex justify-center place-items-center"
+                {topText ? topText : "Click to add top text"}
+              </span>
+              <span
+                style={{
+                  opacity: 1,
+                  color: `rgba(${colorTextBottom.r}, ${colorTextBottom.g}, ${colorTextBottom.b}, ${colorTextBottom.a})`,
+                  textShadow: `0px 0px 10px rgba(${colorBgBottom.r}, ${colorBgBottom.g}, ${colorBgBottom.b}, ${colorBgBottom.a})`,
+                  fontFamily: font,
+                }}
+                className="h-16 cursor-pointer bg-transparent text-5xl "
                 onClick={() => setModal("bottom")}
               >
-                <h1
-                  className=" bg-transparent text-5xl"
-                  style={{
-                    backgroundColor: colorBgBottom,
-                    color: colorTextBottom,
-                  }}
-                >
-                  {bottomText ? bottomText : "Click to add bottom text"}
-                </h1>
-              </div>
+                {bottomText ? bottomText : "Click to add bottom text"}
+              </span>
             </div>
           </div>
 

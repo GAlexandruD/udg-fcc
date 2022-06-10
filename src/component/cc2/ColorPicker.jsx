@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SketchPicker } from "react-color";
 
 const ColorPicker = ({ defaultColor, setColorThings }) => {
@@ -15,12 +15,9 @@ const ColorPicker = ({ defaultColor, setColorThings }) => {
 
   const handleChange = (colored) => {
     setColor(colored);
-    setColorThings(colored.hex);
+    setColorThings(colored.rgb);
+    console.log("Colored.rgb is: ", colored.rgb);
   };
-
-  useEffect(() => {
-    console.log({ color });
-  }, [color]);
 
   return (
     <div className="w-12 h-5 m-2">

@@ -4,12 +4,22 @@ import { useEffect, useState } from "react";
 import CodeChallengeSelection from "./component/CodeChallengeSelection";
 import CodeChallengeTwo from "./component/cc2/CodeChallengeTwo";
 
+import WebFont from "webfontloader";
+
 const App = () => {
   const [lesson, setLesson] = useState("1");
 
   useEffect(() => {
     console.log({ lesson });
   }, [lesson]);
+
+  useEffect(() => {
+    WebFont.load({
+      google: {
+        families: ["Arial", "Comic Sans", "Pacifico"],
+      },
+    });
+  }, []);
 
   return (
     <>
