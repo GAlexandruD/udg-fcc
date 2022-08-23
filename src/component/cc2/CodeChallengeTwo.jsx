@@ -73,43 +73,44 @@ const CodeChallengeTwo = () => {
   const [enableOverflow, setOverflow] = useState(true);
 
   return (
-    <div className="text-center flex flex-col justify-center place-items-center">
-      <h2 className="m-2">Add Image:</h2>
-      <input
-        className="m-4"
-        type="file"
-        accept="image/*"
-        onChange={(event) => {
-          setCropData(null);
-          onChange(event);
-        }}
-      />
-
-      {(modal === "top" || modal === "bottom") && (
-        <Modal
-          modal={modal}
-          setModal={setModal}
-          setTopText={setTopText}
-          topText={topText}
-          setColorTextTop={setColorTextTop}
-          setColorBgTop={setColorBgTop}
-          setBottomText={setBottomText}
-          bottomText={bottomText}
-          setColorTextBottom={setColorTextBottom}
-          setColorBgBottom={setColorBgBottom}
-          colorTextTop={colorTextTop}
-          colorBgTop={colorBgTop}
-          colorBgBottom={colorBgBottom}
-          colorTextBottom={colorTextBottom}
-          setFont={setFont}
+    <>
+      <div className="p-4 flex flex-col items-center">
+        <h2 className="mt-2">Add Image:</h2>
+        <input
+          className="file:rounded-lg p-2 file:bg-green-800 file:text-white file:border-none file:p-1 file:hover:bg-green-700 text-white bg-green-500 rounded-lg shadow-md shadow-green-800"
+          type="file"
+          accept="image/*"
+          onChange={(event) => {
+            setCropData(null);
+            onChange(event);
+          }}
         />
-      )}
+      </div>
+      <div className="flex flex-col justify-center place-items-center bg-pink-600 min-w-[800px]">
+        {(modal === "top" || modal === "bottom") && (
+          <Modal
+            modal={modal}
+            setModal={setModal}
+            setTopText={setTopText}
+            topText={topText}
+            setColorTextTop={setColorTextTop}
+            setColorBgTop={setColorBgTop}
+            setBottomText={setBottomText}
+            bottomText={bottomText}
+            setColorTextBottom={setColorTextBottom}
+            setColorBgBottom={setColorBgBottom}
+            colorTextTop={colorTextTop}
+            colorBgTop={colorBgTop}
+            colorBgBottom={colorBgBottom}
+            colorTextBottom={colorTextBottom}
+            setFont={setFont}
+          />
+        )}
 
-      {file && !cropData && (
-        <>
-          <div className="w-11/12 h-screen overflow-scroll md: w-">
+        {file && !cropData && (
+          <div className="mx-auto overflow-auto">
             <Cropper
-              className="w-[800px] h-[600px]"
+              className="mx-auto w-auto  lg:w-[800px] lg:h-[600px]"
               zoomTo={0.5}
               initialAspectRatio={4 / 3}
               preview=".img-preview"
@@ -129,20 +130,16 @@ const CodeChallengeTwo = () => {
               dragMode="move"
             />
           </div>
-          <MyButton text="Crop" onClick={getCropData} />
-        </>
-      )}
+        )}
 
-      {cropData && (
-        <>
-          <div className="w-screen h-screen overflow-scroll">
+        {cropData && (
+          <div className="w-[800px] h-[600px] min-w-[800px]">
             <div
               ref={exportRef}
               style={{
-                backgroundColor: "#000",
                 backgroundImage: `url(${cropData})`,
               }}
-              className="w-[800px] h-[600px] relative bg-contain bg-no-repeat bg-center grid content-between p-8 border-double border-2 border-green-600"
+              className=" bg-black md:mx-auto w-full h-full relative bg-contain bg-no-repeat bg-center grid content-between p-8 border-double border-2 border-gray-600"
             >
               <span
                 style={{
@@ -170,17 +167,26 @@ const CodeChallengeTwo = () => {
               </span>
             </div>
           </div>
-
-          <MyButton
-            onClick={() => {
-              exportAsImage(exportRef.current, fileName);
-            }}
-            text="Download PNG"
-          />
-          <MyButton text="Crop Again" onClick={() => setCropData(null)} />
-        </>
-      )}
-    </div>
+        )}
+      </div>
+      {/* Outside of pink */}
+      <div className="flex justify-center">
+        <div className="flex flex-col justify-center">
+          {file && !cropData && <MyButton text="Crop" onClick={getCropData} />}
+          {cropData && (
+            <>
+              <MyButton
+                onClick={() => {
+                  exportAsImage(exportRef.current, fileName);
+                }}
+                text="Download PNG"
+              />
+              <MyButton text="Crop Again" onClick={() => setCropData(null)} />
+            </>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 
