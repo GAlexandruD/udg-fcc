@@ -30,8 +30,6 @@ const Charts = ({
       return arrayToReturn;
     };
 
-    console.log({ chartData });
-
     setGoogleChartData(googleNewData());
   }, [limitChartData, toggleChartType, selectedColumnForChart, chartData]);
 

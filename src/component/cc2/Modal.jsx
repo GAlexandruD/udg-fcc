@@ -18,13 +18,14 @@ const Modal = ({
   colorBgBottom,
   colorTextBottom,
   setFont,
+  font,
 }) => {
   return (
     <div
       onClick={(e) => {
         e.preventDefault();
       }}
-      className="absolute w-screen bg-slate-700/70 flex flex-col justify-center place-items-center h-screen z-10 "
+      className="fixed left-0 top-0 overflow-auto w-full h-full bg-slate-700/70 flex flex-col justify-center items-center z-10 "
     >
       <form
         className="bg-transparent"
@@ -79,6 +80,7 @@ const Modal = ({
           Select font:
         </span>
         <select
+          defaultValue={font}
           onChange={(e) => {
             setFont(e.target.value);
           }}
@@ -86,7 +88,6 @@ const Modal = ({
           className="bg-transparent text-yellow-50 text-xl border border-yellow-50"
         >
           <option
-            selected
             className="text-yellow-50 bg-green-500/70 text-xl"
             style={{ fontFamily: "Arial" }}
           >

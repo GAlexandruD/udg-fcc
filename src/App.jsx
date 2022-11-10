@@ -5,13 +5,10 @@ import CodeChallengeSelection from "./component/CodeChallengeSelection";
 import CodeChallengeTwo from "./component/cc2/CodeChallengeTwo";
 
 import WebFont from "webfontloader";
+import CodeChallengeThree from "./component/cc3/CodeChallengeThree";
 
 const App = () => {
   const [lesson, setLesson] = useState("1");
-
-  useEffect(() => {
-    console.log({ lesson });
-  }, [lesson]);
 
   useEffect(() => {
     WebFont.load({
@@ -29,7 +26,7 @@ const App = () => {
       ) : lesson === "2" ? (
         <CodeChallengeTwo />
       ) : (
-        <div className="text-center">Lesson three</div>
+        <CodeChallengeThree />
       )}
       <Footer />
     </>

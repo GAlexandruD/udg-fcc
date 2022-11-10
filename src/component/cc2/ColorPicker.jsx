@@ -16,7 +16,6 @@ const ColorPicker = ({ defaultColor, setColorThings }) => {
   const handleChange = (colored) => {
     setColor(colored);
     setColorThings(colored.rgb);
-    console.log("Colored.rgb is: ", colored.rgb);
   };
 
   return (

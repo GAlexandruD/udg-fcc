@@ -77,7 +77,7 @@ const CodeChallengeTwo = () => {
       <div className="p-4 flex flex-col items-center">
         <h2 className="mt-2">Add Image:</h2>
         <input
-          className="file:rounded-lg p-2 file:bg-green-800 file:text-white file:border-none file:p-1 file:hover:bg-green-700 text-white bg-green-500 rounded-lg shadow-md shadow-green-800"
+          className="w-64 file:rounded-lg p-2 file:bg-green-800 file:text-white file:border-none file:p-1 file:hover:bg-green-700 text-white bg-green-500 rounded-lg shadow-md shadow-green-800"
           type="file"
           accept="image/*"
           onChange={(event) => {
@@ -86,7 +86,23 @@ const CodeChallengeTwo = () => {
           }}
         />
       </div>
-      <div className="flex flex-col justify-center place-items-center bg-pink-600 min-w-[800px]">
+      <div className="flex justify-center pb-4">
+        <div className="flex flex-col sm:flex-row justify-center">
+          {file && !cropData && <MyButton text="Crop" onClick={getCropData} />}
+          {cropData && (
+            <>
+              <MyButton
+                onClick={() => {
+                  exportAsImage(exportRef.current, fileName);
+                }}
+                text="Download PNG"
+              />
+              <MyButton text="Crop Again" onClick={() => setCropData(null)} />
+            </>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-col justify-center place-items-center Xmin-w-[800px]">
         {(modal === "top" || modal === "bottom") && (
           <Modal
             modal={modal}
@@ -104,11 +120,12 @@ const CodeChallengeTwo = () => {
             colorBgBottom={colorBgBottom}
             colorTextBottom={colorTextBottom}
             setFont={setFont}
+            font={font}
           />
         )}
 
         {file && !cropData && (
-          <div className="mx-auto overflow-auto">
+          <div className="p-1 mx-auto w-screen max-w-[800px]">
             <Cropper
               className="mx-auto w-auto  lg:w-[800px] lg:h-[600px]"
               zoomTo={0.5}
@@ -133,58 +150,43 @@ const CodeChallengeTwo = () => {
         )}
 
         {cropData && (
-          <div className="w-[800px] h-[600px] min-w-[800px]">
-            <div
-              ref={exportRef}
-              style={{
-                backgroundImage: `url(${cropData})`,
-              }}
-              className=" bg-black md:mx-auto w-full h-full relative bg-contain bg-no-repeat bg-center grid content-between p-8 border-double border-2 border-gray-600"
-            >
-              <span
+          <div className="w-screen overflow-auto">
+            <div className="mx-auto w-[800px] h-[600px] overflow-auto">
+              <div
+                ref={exportRef}
                 style={{
-                  opacity: 1,
-                  color: `rgba(${colorTextTop.r}, ${colorTextTop.g}, ${colorTextTop.b}, ${colorTextTop.a})`,
-                  textShadow: `0px 0px 10px rgba(${colorBgTop.r}, ${colorBgTop.g}, ${colorBgTop.b}, ${colorBgTop.a})`,
-                  fontFamily: font,
+                  backgroundImage: `url(${cropData})`,
                 }}
-                className="h-16 cursor-pointer bg-transparent text-5xl "
-                onClick={() => setModal("top")}
+                className="bg-gray-700 md:mx-auto w-full h-full relative bg-contain bg-no-repeat bg-center grid content-between p-8 border-4 border-gray-700"
               >
-                {topText ? topText : "Click to add top text"}
-              </span>
-              <span
-                style={{
-                  opacity: 1,
-                  color: `rgba(${colorTextBottom.r}, ${colorTextBottom.g}, ${colorTextBottom.b}, ${colorTextBottom.a})`,
-                  textShadow: `0px 0px 10px rgba(${colorBgBottom.r}, ${colorBgBottom.g}, ${colorBgBottom.b}, ${colorBgBottom.a})`,
-                  fontFamily: font,
-                }}
-                className="h-16 cursor-pointer bg-transparent text-5xl "
-                onClick={() => setModal("bottom")}
-              >
-                {bottomText ? bottomText : "Click to add bottom text"}
-              </span>
+                <span
+                  style={{
+                    opacity: 1,
+                    color: `rgba(${colorTextTop.r}, ${colorTextTop.g}, ${colorTextTop.b}, ${colorTextTop.a})`,
+                    textShadow: `0px 0px 10px rgba(${colorBgTop.r}, ${colorBgTop.g}, ${colorBgTop.b}, ${colorBgTop.a})`,
+                    fontFamily: font,
+                  }}
+                  className="mx-auto h-16 cursor-pointer bg-transparent text-5xl "
+                  onClick={() => setModal("top")}
+                >
+                  {topText ? topText : "Click to add top text"}
+                </span>
+                <span
+                  style={{
+                    opacity: 1,
+                    color: `rgba(${colorTextBottom.r}, ${colorTextBottom.g}, ${colorTextBottom.b}, ${colorTextBottom.a})`,
+                    textShadow: `0px 0px 10px rgba(${colorBgBottom.r}, ${colorBgBottom.g}, ${colorBgBottom.b}, ${colorBgBottom.a})`,
+                    fontFamily: font,
+                  }}
+                  className="mx-auto h-16 cursor-pointer bg-transparent text-5xl "
+                  onClick={() => setModal("bottom")}
+                >
+                  {bottomText ? bottomText : "Click to add bottom text"}
+                </span>
+              </div>
             </div>
           </div>
         )}
-      </div>
-      {/* Outside of pink */}
-      <div className="flex justify-center">
-        <div className="flex flex-col justify-center">
-          {file && !cropData && <MyButton text="Crop" onClick={getCropData} />}
-          {cropData && (
-            <>
-              <MyButton
-                onClick={() => {
-                  exportAsImage(exportRef.current, fileName);
-                }}
-                text="Download PNG"
-              />
-              <MyButton text="Crop Again" onClick={() => setCropData(null)} />
-            </>
-          )}
-        </div>
       </div>
     </>
   );

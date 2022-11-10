@@ -64,7 +64,6 @@ const ImpFileReactTable = () => {
       }, []);
 
       const sortedArray = Object.entries(myArray).sort((a, b) => b[1] - a[1]);
-      console.log({ sortedArray });
 
       setChartData(sortedArray);
     }
