@@ -4,9 +4,8 @@ import Grid from "./Grid";
 
 const CodeChallengeThree = () => {
   return (
-    <div className="text-center flex flex-col justify-center items-center">
+    <div className="bg-black text-center flex flex-col justify-center items-center overflow-auto">
       <p>CodeChallengeThree - Pixel Art</p>
-      <div className="flex"></div>
       <Grid />
     </div>
   );
