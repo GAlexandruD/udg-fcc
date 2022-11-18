@@ -20,7 +20,7 @@ const App = () => {
 
   return (
     <>
-      <CodeChallengeSelection setLesson={setLesson} />
+      <CodeChallengeSelection setLesson={setLesson} lesson={lesson} />
       {lesson === "1" ? (
         <ImpFileReactTable />
       ) : lesson === "2" ? (
