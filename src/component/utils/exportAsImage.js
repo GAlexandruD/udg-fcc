@@ -1,6 +1,6 @@
 import html2canvas from "html2canvas";
 
-const exportAsImage = async (element, imageFileName) => {
+const exportAsImage = async (element, imageFileName, type = "png") => {
   const html = document.getElementsByTagName("html")[0];
   const body = document.getElementsByTagName("body")[0];
   let htmlWidth = html.clientWidth;
@@ -17,7 +17,7 @@ const exportAsImage = async (element, imageFileName) => {
   body.style.width = bodyWidth + "px";
 
   const canvas = await html2canvas(element);
-  const image = canvas.toDataURL("image/gif", 1.0);
+  const image = canvas.toDataURL(`image/${type}`, 1.0);
   downloadImage(image, imageFileName);
   html.style.width = null;
   body.style.width = null;

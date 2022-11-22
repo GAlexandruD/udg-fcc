@@ -16,23 +16,25 @@ const Grid = () => {
     penType: "pen",
     picker: "SwatchesPicker",
     selectedColor: { r: 255, g: 216, b: 76, a: 1 },
+    pngOrJpeg: "png",
   };
 
   function reducer(state, action) {
     switch (action.type) {
-      case "settingArray":
-        console.log("State is: ", state);
+      case "setArray":
         return { ...state, array: [...action.payload] };
-      case "settingColor":
+      case "setColor":
         return { ...state, color: { ...action.payload } };
-      case "settingGridSize":
+      case "setGridSize":
         return { ...state, gridSize: action.payload };
-      case "settingPenType":
+      case "setPenType":
         return { ...state, penType: action.payload };
-      case "settingSelectedColor":
+      case "setSelectedColor":
         return { ...state, selectedColor: { ...action.payload } };
-      case "settingPicker":
+      case "setPicker":
         return { ...state, picker: action.payload };
+      case "setPngOrJpeg":
+        return { ...state, pngOrJpeg: action.payload };
       default:
         throw new Error();
     }
@@ -53,7 +55,7 @@ const Grid = () => {
         });
       }
     }
-    dispatch({ type: "settingArray", payload: grid });
+    dispatch({ type: "setArray", payload: grid });
   };
 
   // Generate grid on page load and when grid size changes
@@ -67,24 +69,24 @@ const Grid = () => {
     if (state.penType === "pen") {
       // Pen painting
       grid[rowIndex][colIndex] = state.selectedColor;
-      dispatch({ type: "settingArray", payload: grid });
+      dispatch({ type: "setArray", payload: grid });
     } else {
       // Bucket painting
 
       //Run flood fill function
       grid = floodFill(state.array, rowIndex, colIndex, state.selectedColor);
-      dispatch({ type: "settingArray", payload: grid });
+      dispatch({ type: "setArray", payload: grid });
     }
   };
 
   return (
     <div className="p-4 w-full flex flex-col justify-center items-center">
-      <div className="">
-        <p className="bg-transparent pb-2">Select grid size</p>
+      <div className="flex">
+        <p className="bg-transparent pb-2 pr-2">Grid size:</p>
         <select
           defaultValue={state.gridSize}
           onChange={(e) => {
-            dispatch({ type: "settingGridSize", payload: e.target.value });
+            dispatch({ type: "setGridSize", payload: e.target.value });
           }}
           id="grid-size"
           className="mb-8 bg-green-600 text-yellow-50 text-xl border border-yellow-50"
@@ -99,54 +101,45 @@ const Grid = () => {
           })}
         </select>
       </div>
-      <div className="flex flex-row">
-        <MyButton
-          onClick={(e) => {
-            console.log("Clicked on pen", state);
-            dispatch({ type: "settingPenType", payload: "pen" });
-          }}
-          text={"✏️"}
-          clicked={state.penType === "pen" ? true : false}
-          bgColor={`rgba(${state.selectedColor.r},${state.selectedColor.g},${state.selectedColor.b},${state.selectedColor.a})`}
-        />
-        <MyButton
-          clicked={state.penType === "bucket" ? true : false}
-          onClick={(e) => {
-            dispatch({
-              type: "settingPenType",
-              payload: "bucket",
-            });
-          }}
-          text={"🪣"}
-          bgColor={`rgba(${state.selectedColor.r},${state.selectedColor.g},${state.selectedColor.b},${state.selectedColor.a})`}
-        />
-        <button
-          className="m-2 bg-green-600 transition duration-150 ease-in-out focus:outline-none border border-transparent hover:bg-green-500 rounded text-yellow-50 px-2 sm:px-5 h-8 flex items-center text-md shadow-md shadow-green-800"
-          type="button"
-          onClick={() => {
-            dispatch({
-              type: "settingPicker",
-              payload:
-                state.picker === "SwatchesPicker"
-                  ? "SketchPicker"
-                  : "SwatchesPicker",
-            });
-          }}
-        >
-          {state.picker === "SketchPicker" ? "SketchPicker" : "SwatchesPicker"}
-        </button>
-        <button
-          className="m-2 bg-green-600 transition duration-150 ease-in-out focus:outline-none border border-transparent hover:bg-green-500 rounded text-yellow-50 px-2 sm:px-5 h-8 flex items-center text-md shadow-md shadow-green-800"
-          type="button"
-          onClick={() => {
-            exportAsImage(
-              exportRef.current,
-              `pixel-art-creation-${state.gridSize}x${state.gridSize}`
-            );
-          }}
-        >
-          Save to PNG
-        </button>
+      <div className="flex flex-col">
+        <div className="flex">
+          <MyButton
+            onClick={(e) => {
+              dispatch({ type: "setPenType", payload: "pen" });
+            }}
+            text={"✏️"}
+            clicked={state.penType === "pen" ? true : false}
+            bgColor={`rgba(${state.selectedColor.r},${state.selectedColor.g},${state.selectedColor.b},${state.selectedColor.a})`}
+          />
+          <MyButton
+            clicked={state.penType === "bucket" ? true : false}
+            onClick={(e) => {
+              dispatch({
+                type: "setPenType",
+                payload: "bucket",
+              });
+            }}
+            text={"🪣"}
+            bgColor={`rgba(${state.selectedColor.r},${state.selectedColor.g},${state.selectedColor.b},${state.selectedColor.a})`}
+          />
+          <button
+            className="m-2 bg-green-600 transition duration-150 ease-in-out focus:outline-none border border-transparent hover:bg-green-500 rounded text-yellow-50 px-2 sm:px-5 h-8 flex items-center text-md shadow-md shadow-green-800"
+            type="button"
+            onClick={() => {
+              dispatch({
+                type: "setPicker",
+                payload:
+                  state.picker === "SwatchesPicker"
+                    ? "SketchPicker"
+                    : "SwatchesPicker",
+              });
+            }}
+          >
+            {state.picker === "SketchPicker"
+              ? "SketchPicker"
+              : "SwatchesPicker"}
+          </button>
+        </div>
       </div>
       <div className="grid grid-cols-3  sm:flex">
         {[
@@ -201,6 +194,33 @@ const Grid = () => {
             </div>
           }
         </div>
+      </div>
+      <div className="flex justify-center items-center pt-4">
+        <button
+          className="m-2 bg-green-600 transition duration-150 ease-in-out focus:outline-none border border-transparent hover:bg-green-500 rounded text-yellow-50 px-2 sm:px-5 h-8 flex items-center text-md shadow-md shadow-green-800"
+          type="button"
+          onClick={() => {
+            exportAsImage(
+              exportRef.current,
+              `pixel-art-creation-${state.gridSize}x${state.gridSize}`,
+              state.pngOrJpeg
+            );
+          }}
+        >
+          Download
+        </button>
+        <button
+          className="m-2 bg-green-600 transition duration-150 ease-in-out focus:outline-none border border-transparent hover:bg-green-500 rounded text-yellow-50 px-2 sm:px-5 h-8 flex items-center text-md shadow-md shadow-green-800"
+          type="button"
+          onClick={(e) => {
+            dispatch({
+              type: "setPngOrJpeg",
+              payload: state.pngOrJpeg === "png" ? "jpeg" : "png",
+            });
+          }}
+        >
+          {state.pngOrJpeg === "png" ? "PNG" : "JPEG"}
+        </button>
       </div>
     </div>
   );

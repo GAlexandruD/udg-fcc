@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import MyButton from "../cc1/MyButton";
 import exportAsImage from "../utils/exportAsImage";
 
@@ -16,6 +16,7 @@ const CodeChallengeTwo = () => {
   const [topText, setTopText] = useState("");
   const [bottomText, setBottomText] = useState("");
   const [font, setFont] = useState("Arial");
+  const [fileType, setFileType] = useState("png");
 
   const [cropData, setCropData] = useState(null);
   const [cropper, setCropper] = useState();
@@ -93,10 +94,17 @@ const CodeChallengeTwo = () => {
             <>
               <MyButton
                 onClick={() => {
-                  exportAsImage(exportRef.current, fileName);
+                  exportAsImage(exportRef.current, fileName, fileType);
                 }}
-                text="Download PNG"
+                text="Download"
               />
+              {/* FIXME: Looks like it only saves as jpeg when there are many colors in the image.
+              <MyButton
+                onClick={() => {
+                  setFileType(fileType === "png" ? "jpeg" : "png");
+                }}
+                text={fileType === "png" ? "PNG" : "JPEG"}
+              /> */}
               <MyButton text="Crop Again" onClick={() => setCropData(null)} />
             </>
           )}

@@ -4,7 +4,6 @@ import { SketchPicker, SwatchesPicker } from "react-color";
 const ColorPicker = ({ defaultColor, dispatch, selectedColor, picker }) => {
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const [color, setColor] = useState(defaultColor);
-  console.log("ColorPicker: ", color);
 
   const handleClick = () => {
     if (
@@ -14,7 +13,7 @@ const ColorPicker = ({ defaultColor, dispatch, selectedColor, picker }) => {
     ) {
       setDisplayColorPicker(!displayColorPicker);
     } else {
-      dispatch({ type: "settingSelectedColor", payload: color.rgb });
+      dispatch({ type: "setSelectedColor", payload: color.rgb });
     }
   };
 
@@ -24,7 +23,7 @@ const ColorPicker = ({ defaultColor, dispatch, selectedColor, picker }) => {
 
   const handleChange = (colored) => {
     setColor(colored);
-    dispatch({ type: "settingSelectedColor", payload: color.rgb });
+    dispatch({ type: "setSelectedColor", payload: color.rgb });
   };
 
   return (
